@@ -83,7 +83,7 @@ end
 
 
 function healBank() 
-    if API.GetHPrecent() < 80 then 
+    if API.GetHPrecent() < 25 then 
         API.logDebug("going to bank for healing")
         API.DoAction_Tile(WPOINT.new(3236 + math.random(0,1),2761+ math.random(0,1),0))
 
