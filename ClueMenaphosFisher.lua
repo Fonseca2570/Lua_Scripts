@@ -1,32 +1,34 @@
 --[[
-# Script Name:  ClueMenaphosThieving
-# Description:  <Pickpockets menaphos merchants just start near them north of the lodestone in the bank>
+# Script Name:  ClueMenaphosFishing
+# Description:  <Fishing menaphos>
+# Instructions: if you don't have the perk for baits put line 21 to true
+# Start near the port fishing spot not the vip
 # Autor:        <Clue (discord)>
 # Version:      <1.0>
-# Datum:        <2024.02.15>
+# Datum:        <2024.02.19>
 --]]
-
 
 -- imports
 local API = require("api")
+local UTILS = require("utils")
 
 
 -- variables
-local startXp = API.GetSkillXP("THIEVING")
+local startXp = API.GetSkillXP("FISHING")
 local MAX_IDLE_TIME_MINUTES = 5
 local afk = os.time()
-local MenaphosNPC = { 24485 }
-local StunHL = { 4531 }
-
+local FishingSpot = 24572
+local checkBait = false
+local depositBank = 107496
+local bait = 313
 
 -- draw gui and log box
 API.SetDrawLogs(true)
 API.SetDrawTrackedSkills(true)
 
-
 -- helper functions
 local function checkXpIncrease() 
-    local newXp = API.GetSkillXP("THIEVING")
+    local newXp = API.GetSkillXP("FISHING")
     if newXp == startXp then 
         API.logError("no xp increase")
         API.Write_LoopyLoop(false)
@@ -67,46 +69,27 @@ local function isMoving()
     return API.ReadPlayerMovin()
 end
 
-
-local function PickPocket()
-    API.DoAction_NPC(0x29,API.OFF_ACT_InteractNPC_route2, MenaphosNPC ,50);
-end
-
-local function IsStunned() 
-    local highlights = API.GetAllObjArray1(StunHL, 1, 4)
-    if #highlights > 0 then 
-        return true
-    end
-
-    return false
-end 
-
-
-function healBank() 
-    if API.GetHPrecent() < 80 then 
-        API.logDebug("going to bank for healing")
-        API.DoAction_Tile(WPOINT.new(3236 + math.random(0,1),2761+ math.random(0,1),0))
-
-        API.RandomSleep2(5000,500,1000)
-
-        API.WaitUntilMovingEnds()
-
-        if API.PInArea21(3235,3238,2760,2762) then 
-            while API.GetHPrecent() < 95 do 
-                API.RandomSleep2(500,200,400)
-            end
-        end
-    end
-end
-
-while(API.Read_LoopyLoop()) do
+while(API.Read_LoopyLoop()) do 
     API.DoRandomEvents()
     idleCheck()
     gameStateChecks()
 
-    if not API.CheckAnim(40) and not IsStunned() then
-        healBank()
-        PickPocket()
+    if not API.CheckAnim(100) and not isMoving() then 
+        if checkBait and API.InvStackSize(bait) == 0 then 
+            API.logWarn("Out of bait")
+            API.Write_LoopyLoop(false)
+        end
+
+        if API.InvFull_() then 
+            API.logDebug("Depositing")
+            API.DoAction_Object1(0x29,4128,{ depositBank },50); 
+            API.RandomSleep2(1200,400,800)
+        else
+            API.logDebug("Fishing")
+            API.DoAction_NPC(0x3c,API.OFF_ACT_InteractNPC_route,{ FishingSpot },50);
+            API.RandomSleep2(1200,400,800)
+        end
     end
-    
+
+    API.RandomSleep2(1200,500,1000)
 end
