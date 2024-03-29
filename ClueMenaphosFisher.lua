@@ -18,9 +18,19 @@ local startXp = API.GetSkillXP("FISHING")
 local MAX_IDLE_TIME_MINUTES = 5
 local afk = os.time()
 local FishingSpot = 24572
+local VipFishingSpot = 24574
 local checkBait = false
 local depositBank = 107496
+local vipArea = true
 local bait = 313
+
+local activeFishingSpot = 0
+
+if vipArea then 
+    activeFishingSpot = VipFishingSpot
+else
+    activeFishingSpot = FishingSpot
+end
 
 -- draw gui and log box
 API.SetDrawLogs(true)
@@ -81,12 +91,22 @@ while(API.Read_LoopyLoop()) do
         end
 
         if API.InvFull_() then 
-            API.logDebug("Depositing")
-            API.DoAction_Object1(0x29,4128,{ depositBank },50); 
-            API.RandomSleep2(1200,400,800)
+            if vipArea then 
+                if API.BankOpen2() then 
+                    API.KeyboardPress2(0x33,0,50) -- deposit all
+                    API.RandomSleep2(600, 300, 6000)
+                end
+                API.DoAction_Object_string1(0x5, API.OFF_ACT_GeneralObject_route1, {"Bank chest"}, 50, true)
+                API.RandomSleep2(600,200,400)
+                API.WaitUntilMovingEnds()
+            else
+                API.logDebug("Depositing")
+                API.DoAction_Object1(0x29,4128,{ depositBank },50); 
+                API.RandomSleep2(1200,400,800)
+            end
         else
             API.logDebug("Fishing")
-            API.DoAction_NPC(0x3c,API.OFF_ACT_InteractNPC_route,{ FishingSpot },50);
+            API.DoAction_NPC(0x3c,API.OFF_ACT_InteractNPC_route,{ activeFishingSpot },50);
             API.RandomSleep2(1200,400,800)
         end
     end
