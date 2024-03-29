@@ -73,7 +73,7 @@ local function PickPocket()
 end
 
 local function IsStunned() 
-    local highlights = API.GetAllObjArray1(StunHL, 1, 4)
+    local highlights = API.GetAllObjArray1(StunHL, 1, {4})
     if #highlights > 0 then 
         return true
     end
@@ -82,7 +82,7 @@ local function IsStunned()
 end 
 
 
-function healBank() 
+local function healBank() 
     if API.GetHPrecent() < 25 then 
         API.logDebug("going to bank for healing")
         API.DoAction_Tile(WPOINT.new(3236 + math.random(0,1),2761+ math.random(0,1),0))
