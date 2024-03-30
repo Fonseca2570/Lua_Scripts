@@ -96,7 +96,7 @@ while(API.Read_LoopyLoop()) do
                     API.KeyboardPress2(0x33,0,50) -- deposit all
                     API.RandomSleep2(600, 300, 6000)
                 end
-                API.DoAction_Object_string1(0x5, API.OFF_ACT_GeneralObject_route1, {"Bank chest"}, 50, true)
+                API.DoAction_Object_string1(0x5, API.OFF_ACT_GeneralObject_route3, {"Bank chest"}, 50, true)
                 API.RandomSleep2(600,200,400)
                 API.WaitUntilMovingEnds()
             else
