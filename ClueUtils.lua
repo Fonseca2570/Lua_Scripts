@@ -29,7 +29,11 @@ ClueUtils.BuffBar = {
     prayMageAncient = 26041,
     soulsplit = 26033,
     Ressonance = 14222,
-    Darkness = 30122
+    Darkness = 30122,
+    LivingDeath = 0, -- TODO
+    Necrosis = 0,
+    Souls = 0,
+    Skeleton = 0
 }
 
 ClueUtils.DeBuffBar = {
@@ -44,15 +48,34 @@ function ClueUtils.IsAbilityAvailable(ability)
     return update ~= nil and update.enabled and update.cooldown_timer == 0
 end
 
+
 ---@param ability Abilitybar
+---@return boolean
 function ClueUtils.DoAbility(ability) 
     if ClueUtils.IsAbilityAvailable(ability) then 
         API.DoAction_Ability_Direct(ability, 1, API.OFF_ACT_GeneralInterface_route)
+        return true
     else
         print("ability not available: ", ability.name)
+        return false
     end
 end
 
+
+-- used for high alch
+---@param ability Abilitybar
+---@return boolean
+function ClueUtils.DoSpecialAbility(ability) 
+    if ClueUtils.IsAbilityAvailable(ability) then 
+        API.DoAction_Ability_Direct(ability, 0, API.OFF_ACT_Bladed_interface_route)
+        return true
+    else
+        print("ability not available: ", ability.name)
+        return false
+    end
+end
+
+---@return boolean
 function ClueUtils.AtLocation(loc) 
     return API.PInArea21(loc.x1, loc.x2, loc.y1, loc.y2)
 end
@@ -69,6 +92,18 @@ end
 function ClueUtils.ActivatePrayer(ability, buffbarID) 
     local prayer = API.Buffbar_GetIDstatus(buffbarID, false)
     if prayer.found then 
+        return
+    end
+
+    ClueUtils.DoAbility(ability)
+end
+
+-- can be used to deactivate prayer
+---@param ability Abilitybar
+---@param buffbarID number
+function ClueUtils.DeactivatePrayer(ability, buffbarID) 
+    local prayer = API.Buffbar_GetIDstatus(buffbarID, false)
+    if not prayer.found then 
         return
     end
 
@@ -111,12 +146,10 @@ function ClueUtils.IsTargetingMob(mobName)
 
 end
 
----@param obj userdata --vector<int>
-function ClueUtils.OpenLootTable(obj) 
+function ClueUtils.OpenLootTable() 
     if not API.LootWindowOpen_2() then 
-        if #API.GetAllObjArray1(obj, 20, {3}) > 0 then 
             API.KeyboardPress("\\", 0, 50)
-        end
+            API.RandomSleep2(600,100,200)
     end
 end
 
@@ -178,6 +211,107 @@ function ClueUtils.RenewFamiliar(pouch)
 
     return true
 end
+
+---@return number
+function ClueUtils.NecroStacks() 
+    local buff = API.Buffbar_GetIDstatus(ClueUtils.BuffBar.Necrosis, false)
+    if buff ~= nil then 
+        return buff.conv_text -- TODO need to check this
+    end
+
+    return 0
+end
+
+---@return number
+function ClueUtils.SoulStack() 
+    local buff = API.Buffbar_GetIDstatus(ClueUtils.BuffBar.Souls, false)
+    if buff ~= nil then 
+        return buff.conv_text -- TODO need to check this
+    end
+
+    return 0
+end
+
+---@return boolean
+function ClueUtils.ConjuresAlive() 
+    local buff = API.Buffbar_GetIDstatus(ClueUtils.BuffBar.Skeleton, false)
+    return buff.found
+end
+
+---@return boolean
+function ClueUtils.InLivingDeath() 
+    local buff = API.Buffbar_GetIDstatus(ClueUtils.BuffBar.LivingDeath, false)
+    return buff.found
+end
+
+function ClueUtils.LivingDeathRotation() 
+    if ClueUtils.DoAbility(ClueUtils.Abilities.DeathSkull) then 
+        return
+    end
+
+    if ClueUtils.NecroStacks() >= 6 then 
+        if ClueUtils.DoAbility(ClueUtils.Abilities.FingerDeath) then 
+            return
+        end
+    end
+
+    if ClueUtils.DoAbility(ClueUtils.Abilities.TouchOfDeath) then 
+        return
+    end
+    
+    ClueUtils.DoAbility(ClueUtils.Abilities.Necromancy)
+end 
+
+function ClueUtils.NecroBestAbility() 
+    if DeadUtils.isAbilityQueued() then 
+        return
+    end
+
+    if ClueUtils.InLivingDeath() then 
+        return ClueUtils.LivingDeathRotation()
+    end
+
+    if ClueUtils.DoAbility(ClueUtils.Abilities.LivingDeath) then 
+        return
+    end
+
+    if not ClueUtils.ConjuresAlive() then 
+        if ClueUtils.DoAbility(ClueUtils.Abilities.ArmyConjure) then 
+            return
+        end
+    end
+
+    if ClueUtils.SoulStack >= 3 then 
+        if ClueUtils.DoAbility(ClueUtils.Abilities.VolleyOfSouls) then 
+            return
+        end
+    end
+
+    if ClueUtils.DoAbility(Clueutils.Abilities.Ghost) then 
+        return
+    end
+
+    if ClueUtils.DoAbility(Clueutils.Abilities.Skeleton) then 
+        return
+    end
+
+    if ClueUtils.NecroStacks() >= 12 then 
+        if ClueUtils.DoAbility(ClueUtils.Abilities.FingerDeath) then 
+            return
+        end
+    end
+
+    if ClueUtils.DoAbility(ClueUtils.Abilities.TouchOfDeath) then 
+        return
+    end
+
+    if ClueUtils.DoAbility(ClueUtils.Abilities.SoulSap) then 
+        return
+    end
+
+    ClueUtils.DoAbility(ClueUtils.Abilities.Necromancy)
+end
+
 
 return ClueUtils
 
