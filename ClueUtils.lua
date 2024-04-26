@@ -18,7 +18,17 @@ ClueUtils.Abilities = {
     Resonance = API.GetABs_name1("Resonance"),
     Surge = API.GetABs_name1("Surge"),
     Darkness = API.GetABs_name1("Darkness"),
-    WarRetreat = API.GetABs_name1("War's Retreat Teleport")
+    WarRetreat = API.GetABs_name1("War's Retreat Teleport"),
+    ArmyConjure = API.GetABs_name1("Conjure Undead Army"),
+    SoulSap = API.GetABs_name1("Soul Sap"),
+    VolleyOfSouls = API.GetABs_name1("Volley of Souls"),
+    TouchOfDeath = API.GetABs_name1("Touch of Death"),
+    FingerDeath = API.GetABs_name1("Finger of Death"),
+    Necromancy = API.GetABs_name1("Basic<nbsp>Attack"),
+    LivingDeath = API.GetABs_name1("Living Death"),
+    DeathSkull = API.GetABs_name1("Death Skulls"),
+    CommandGhost = API.GetABs_name1("Command Vengeful Ghost"),
+    CommandSkeleton = API.GetABs_name1("Command Skeleton Warrior")
 }
 
 ClueUtils.Locations = {
@@ -30,10 +40,10 @@ ClueUtils.BuffBar = {
     soulsplit = 26033,
     Ressonance = 14222,
     Darkness = 30122,
-    LivingDeath = 0, -- TODO
-    Necrosis = 0,
-    Souls = 0,
-    Skeleton = 0
+    LivingDeath = 30078,
+    Necrosis = 30101,
+    Souls = 30123,
+    Skeleton = 30102
 }
 
 ClueUtils.DeBuffBar = {
@@ -48,7 +58,6 @@ function ClueUtils.IsAbilityAvailable(ability)
     return update ~= nil and update.enabled and update.cooldown_timer == 0
 end
 
-
 ---@param ability Abilitybar
 ---@return boolean
 function ClueUtils.DoAbility(ability) 
@@ -60,7 +69,6 @@ function ClueUtils.DoAbility(ability)
         return false
     end
 end
-
 
 -- used for high alch
 ---@param ability Abilitybar
@@ -161,6 +169,7 @@ function ClueUtils.LootAll()
     end
 end
 
+
 ---@param ability Abilitybar
 ---@return boolean
 function ClueUtils.IsAbilityQueued(ability) 
@@ -216,7 +225,7 @@ end
 function ClueUtils.NecroStacks() 
     local buff = API.Buffbar_GetIDstatus(ClueUtils.BuffBar.Necrosis, false)
     if buff ~= nil then 
-        return buff.conv_text -- TODO need to check this
+        return buff.conv_text
     end
 
     return 0
@@ -226,7 +235,7 @@ end
 function ClueUtils.SoulStack() 
     local buff = API.Buffbar_GetIDstatus(ClueUtils.BuffBar.Souls, false)
     if buff ~= nil then 
-        return buff.conv_text -- TODO need to check this
+        return buff.conv_text
     end
 
     return 0
@@ -287,11 +296,11 @@ function ClueUtils.NecroBestAbility()
         end
     end
 
-    if ClueUtils.DoAbility(Clueutils.Abilities.Ghost) then 
+    if ClueUtils.DoAbility(Clueutils.Abilities.CommandGhost) then 
         return
     end
 
-    if ClueUtils.DoAbility(Clueutils.Abilities.Skeleton) then 
+    if ClueUtils.DoAbility(Clueutils.Abilities.CommandSkeleton) then 
         return
     end
 
