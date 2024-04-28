@@ -28,7 +28,8 @@ ClueUtils.Abilities = {
     LivingDeath = API.GetABs_name1("Living Death"),
     DeathSkull = API.GetABs_name1("Death Skulls"),
     CommandGhost = API.GetABs_name1("Command Vengeful Ghost"),
-    CommandSkeleton = API.GetABs_name1("Command Skeleton Warrior")
+    CommandSkeleton = API.GetABs_name1("Command Skeleton Warrior"),
+    HighAlch = API.GetABs_name1("High Level Alchemy")
 }
 
 ClueUtils.Locations = {
@@ -151,7 +152,13 @@ function ClueUtils.IsTargetingMob(mobName)
     end
 
     return false
+end
 
+---@param id number
+---@return boolean
+function ClueUtils.IsTargetingMobID(id) 
+    local interact = API.Local_PlayerInterActingWith_Id()
+    return interact == id
 end
 
 function ClueUtils.OpenLootTable() 
@@ -296,11 +303,11 @@ function ClueUtils.NecroBestAbility()
         end
     end
 
-    if ClueUtils.DoAbility(Clueutils.Abilities.CommandGhost) then 
+    if ClueUtils.DoAbility(ClueUtils.Abilities.CommandGhost) then 
         return
     end
 
-    if ClueUtils.DoAbility(Clueutils.Abilities.CommandSkeleton) then 
+    if ClueUtils.DoAbility(ClueUtils.Abilities.CommandSkeleton) then 
         return
     end
 
@@ -319,6 +326,19 @@ function ClueUtils.NecroBestAbility()
     end
 
     ClueUtils.DoAbility(ClueUtils.Abilities.Necromancy)
+end
+
+
+---@param items userdata --vector<number>
+---@return boolean
+function ClueUtils.HighAlch(items) 
+    for _, item in pairs(items) do
+        if API.InvItemcount_1(item) > 0 then 
+            return ClueUtils.DoSpecialAbility(ClueUtils.Abilities.HighAlch)
+        end
+    end
+
+    return false
 end
 
 
