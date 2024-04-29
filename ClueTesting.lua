@@ -26,19 +26,20 @@ local Bosses = {
             11712, -- Godsword shard 2
             11714, -- Godsword shard 3
             11704, -- Bandos Hilt
-            30318, -- Warpriest of bandos helm
-            30312, -- Warpriest of bandos cuirass
-            30315, -- Warpriest of bandos greaves
-            30306, -- Warpriest of bandos gauntlets
-            30309, -- Warpriest of bandos boots
-            30321, -- Warpriest of bandos cape
+            30320, -- Warpriest of bandos helm
+            30314, -- Warpriest of bandos cuirass
+            30317, -- Warpriest of bandos greaves
+            30308, -- Warpriest of bandos gauntlets
+            30311, -- Warpriest of bandos boots
+            30323, -- Warpriest of bandos cape
             42008, -- Sealed clue scroll (hard)
             42009, -- Sealed clue scroll (elite)
             18778, -- Effigy
-            25042, -- the gloty of general Graardor
+            25042, -- the glory of general Graardor
             33832, -- Decaying tooth
             14794, -- noted ourg bones
             1514, -- noted magic logs
+            226, -- noted limproot
         },
         Portal = 114775,
         Locations = {
