@@ -14,21 +14,12 @@ API.SetDrawTrackedSkills(true)
 
 --[[Variables]]--
 
-local enrichedGuards = {
-    guard1 = 28436, -- TODO
-    guard2 = 28433, -- TODO
-    guard3 = 28427, -- TODO
-    guard4 = 28430 -- TODO
-}
-
 local normalGuards = {
-    guard1 = 28426, -- TODO
-    guard2 = 28429, -- TODO
-    guard3 = 28432, -- TODO
-    guard4 = 28435 -- TODO
+    guard1 = 121756,
+    guard2 = 121753, 
+    guard3 = 121750, 
+    guard4 = 121747
 }
-
-
 ------------------------------------------------------------------------
 
 local function idleCheck() 
@@ -41,45 +32,45 @@ local function idleCheck()
     end
 end
 
-local function findEnrich()
-    local objs = API.ReadAllObjectsArray({1}, {enrichedGuards.guard1, enrichedGuards.guard2, enrichedGuards.guard3, enrichedGuards.guard4 }, {})
+local function findNonEnrich() 
+    local objs = API.ReadAllObjectsArray({12}, {normalGuards.guard1, normalGuards.guard2, normalGuards.guard3, normalGuards.guard4 }, {})
     for _, obj in ipairs(objs) do
-        for _, id in pairs(enrichedGuards) do
-            if obj.Id == id then
-                return true 
-            end
+        if obj.Bool1 == 0 then
+            return obj
         end
     end
-    return false
+    return nil
+end 
+
+local function findEnrich()
+    local objs = API.ReadAllObjectsArray({12}, {normalGuards.guard1, normalGuards.guard2, normalGuards.guard3, normalGuards.guard4 }, {})
+    for _, obj in ipairs(objs) do
+        if obj.Bool1 == 1 then 
+            return obj
+        end
+    end
+    return findNonEnrich()
 end
 
-local function harvestGuard()
-    if not API.CheckAnim(80) and findEnrich() then
-        print("[" .. os.date("%X") .. "] Enriched Found")
-        API.DoAction_NPC(0x3c, API.OFF_ACT_InteractNPC_route, { enrichedGuards.guard1, enrichedGuards.guard2, enrichedGuards.guard3, enrichedGuards.guard4 }, 50)
-        API.RandomSleep2(2000, 600, 900)
-    elseif not API.CheckAnim(80) and not findEnrich() then
-        print("[" .. os.date("%X") .. "] No Enriched. Harvesting Normal")
-        API.DoAction_NPC(0x3c, API.OFF_ACT_InteractNPC_route, {normalGuards.guard1, normalGuards.guard2, normalGuards.guard3, normalGuards.guard4}, 50)
-        API.RandomSleep2(2000, 600, 900)
-    end
-end
-
-local function harvesNotEnriched() 
-    if not API.CheckAnim(80) then 
-        API.DoAction_NPC(0x3c, API.OFF_ACT_InteractNPC_route, {normalGuards.guard1, normalGuards.guard2, normalGuards.guard3, normalGuards.guard4}, 50)
-        API.RandomSleep2(2000, 600, 900)
-    end
-end
 
 while (API.Read_LoopyLoop()) do
     API.DoRandomEvents()
     idleCheck()
     local level = API.GetSkillByName("WOODCUTTING").level
-    if level >= 92 then 
-        harvestGuard()
-    else
-        harvesNotEnriched()
+    if not API.CheckAnim(80) then 
+        if level >= 92 then 
+            obj = findEnrich()
+            if obj ~= nil then 
+                API.API.DoAction_Object1(0x3b, API.OFF_ACT_GeneralObject_route0, {obj.Id}, 50)
+                API.RandomSleep2(2000, 600, 900)
+            end
+        else
+            obj = findNonEnrich()
+            if obj ~= nil then 
+                API.DoAction_Object1(0x3b, API.OFF_ACT_GeneralObject_route0, {obj.Id}, 50)
+                API.RandomSleep2(2000, 600, 900)
+            end
+        end
     end
     API.RandomSleep2(2000, 600, 900)
 end
