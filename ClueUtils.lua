@@ -2,6 +2,10 @@ local API = require("api")
 local DeadUtils = require("utils")
 local ClueUtils = {}
 
+---@class InventoryItems
+---@field item number
+---@field count number
+
 ClueUtils.MostUsedIDS = {
     WarAltar = 114748, -- summoning renewal and prayer
     WarRetreatBank = 114750 -- bank at war retreat
@@ -341,6 +345,66 @@ function ClueUtils.HighAlch(items)
     return false
 end
 
+---@param inventoryItems userdata --vector<inventoryItems>
+---@return boolean
+function ClueUtils.CheckItems(inventoryItems) 
+    for _, obj in pairs(inventoryItems) do 
+        count = API.InvItemcount_1(obj.item)
+        if count < obj.count then 
+            return false
+        end
+    end
+
+    return true
+end
+
+---@param inventoryItems userdata --vector<InventoryItems>
+---@param pouch number
+---@param renewFamiliar boolean
+---@return boolean
+function ClueUtils.WarRetreatPreBoss(inventoryItems, renewFamiliar, pouch) 
+    if not ClueUtils.AtLocation(ClueUtils.Locations.WarRetreat) then 
+        if not ClueUtils.DoAbility(ClueUtils.Abilities.WarRetreat) then 
+            return false
+        end
+
+        API.RandomSleep2(4000,100,400)
+        API.WaitUntilMovingandAnimEnds()
+    end
+
+
+    if renewFamiliar then 
+        if not ClueUtils.RenewFamiliar(pouch) then 
+            return false
+        end
+    end
+
+    for _, obj in pairs(inventoryItems) do 
+        count = API.InvItemcount_1(obj.item)
+        if count < obj.count then 
+            API.DoAction_Object_string1(0x33,API.OFF_ACT_GeneralObject_route3,{ "Bank chest" }, 50, true) -- load last preset
+            API.RandomSleep2(1200,0,200) -- 
+            API.WaitUntilMovingEnds()
+
+            if not ClueUtils.CheckItems(inventoryItems) then 
+                return false -- load last preset dind't work so it fails
+            end
+        end
+    end
+
+    if API.GetHPrecent() < 90 then 
+        API.RandomSleep2(6000,100,400)
+    end
+
+    if API.GetPrayPrecent() < 90 then 
+        API.DoAction_Object1(0x3d,API.OFF_ACT_GeneralObject_route0,{ClueUtils.MostUsedIDS.WarAltar} ,50)
+        API.RandomSleep2(600,0,0)
+        API.WaitUntilMovingandAnimEnds()
+        API.RandomSleep2(1200,0,0)
+    end
+
+    return true
+end
 
 return ClueUtils
 

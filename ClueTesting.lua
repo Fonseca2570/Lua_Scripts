@@ -50,6 +50,13 @@ local Bosses = {
     }
 }
 
+local preset = {
+    {
+        item = 385, -- sharks
+        count = 10,
+    }
+}
+
 local States = {
     Banking = "Banking",
     GoingToBoss = "Going to Boss",
@@ -341,28 +348,18 @@ while API.Read_LoopyLoop() do
     idleCheck()
     gameStateChecks()
     API.Write_ScripCuRunning0(currentState)
+    if fail > 3 then 
+        API.Write_LoopyLoop(false)
+    end
 
     if currentState == States.Banking then 
-        if not ClueUtils.AtLocation(ClueUtils.Locations.WarRetreat) then 
-            TeleportToWarRetreat()
-            API.RandomSleep2(3000,500,1000)
-        end
-
-        LoadLastPreset()
-        API.RandomSleep2(1000,500,1000)
-        API.WaitUntilMovingEnds()
-
-        if API.GetPrayPrecent() < 90 then 
-            API.DoAction_Object1(0x3d,API.OFF_ACT_GeneralObject_route0,{ClueUtils.MostUsedIDS.WarAltar} ,50)
-            API.RandomSleep2(600,0,0)
-            API.WaitUntilMovingandAnimEnds()
-            API.RandomSleep2(1200,0,0)
-        end
-
-        if API.GetHPrecent() > 90 then 
+        if ClueUtils.WarRetreatPreBoss(preset, false, 0) then 
             PressPortal()
             API.RandomSleep2(1000,500,1000)
             API.WaitUntilMovingEnds()
+            fail = 0
+        else 
+            fail = fail + 1
         end
         goto continue
     end
