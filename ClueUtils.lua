@@ -29,7 +29,8 @@ ClueUtils.Abilities = {
     DeathSkull = API.GetABs_name1("Death Skulls"),
     CommandGhost = API.GetABs_name1("Command Vengeful Ghost"),
     CommandSkeleton = API.GetABs_name1("Command Skeleton Warrior"),
-    HighAlch = API.GetABs_name1("High Level Alchemy")
+    HighAlch = API.GetABs_name1("High Level Alchemy"),
+    Disassemble = API.GetABs_name1("Disassemble")
 }
 
 ClueUtils.Locations = {
@@ -334,13 +335,32 @@ end
 function ClueUtils.HighAlch(items) 
     for _, item in pairs(items) do
         if API.InvItemcount_1(item) > 0 then 
-            return ClueUtils.DoSpecialAbility(ClueUtils.Abilities.HighAlch)
+            if ClueUtils.DoSpecialAbility(ClueUtils.Abilities.HighAlch) then 
+                if API.DoAction_Inventory2({item}, 0, 0, API.OFF_ACT_GeneralInterface_route1) then 
+                    return true
+                end
+            end
         end
     end
 
     return false
 end
 
+---@param items userdata --vector<number>
+---@return boolean
+function ClueUtils.Disassemble(items)
+    for _, item in pairs(items) do
+        if API.InvItemcount_1(item) > 0 then 
+            if ClueUtils.DoSpecialAbility(ClueUtils.Abilities.Disassemble) then 
+                if API.DoAction_Inventory2({item}, 0, 0, API.OFF_ACT_GeneralInterface_route1) then 
+                    return true
+                end
+            end
+        end
+    end
+
+    return false
+end
 
 return ClueUtils
 
