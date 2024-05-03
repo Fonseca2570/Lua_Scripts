@@ -40,13 +40,70 @@ local Bosses = {
             14794, -- noted ourg bones
             1514, -- noted magic logs
             226, -- noted limproot
+            7054, -- chili potato
+            385, -- shark    
         },
         Portal = 114775,
         Locations = {
             Outside = {x1 = 2850, x2 = 2856, y1 = 5351, y2 = 5362},
             BetweenDoors = {x1 = 2857, x2 = 2862, y1 = 5351, y2 = 5362}
         },
-        HighAlchDrops = {}
+        HighAlchDrops = {},
+        DisassembleDrops = {
+            30320, -- Warpriest of bandos helm
+            30308, -- Warpriest of bandos gauntlets
+            30311, -- Warpriest of bandos boots
+            30323, -- Warpriest of bandos cape
+        },
+        AdjustPosition = nil
+    },
+    Saradomin = {
+        OutsideDoor = 0,
+        InsideDoor = 0,
+        Boss = 0,
+        Minions = {0,0,0},
+        SumBetweenDoors = 0,
+        Drops = {
+            995, --coins
+            11710, -- Godsword shard 1
+            11712, -- Godsword shard 2
+            11714, -- Godsword shard 3
+            42008, -- Sealed clue scroll (hard)
+            42009, -- Sealed clue scroll (elite)
+            18778, -- Effigy  
+            1602, -- noted diamond
+            238, -- noted unicorn horn
+            1392, -- noted battlestaff
+            5316, -- magic Seed
+            11730, -- saradomin sword
+            25037, -- armadyl crossbow
+            34855, -- off hand armadyl crossbow
+            25034, -- saradomin murmur
+            25031, -- saradomin hiss
+            25028, -- saradomin whisper
+            11706, -- saradomin hilt
+            28769, -- warpriest of saradomin Helm
+            28763, -- warpriest of saradomin cuirass
+            28766, -- Warpriest of saradomin greaves
+            28757, -- Warpriest of saradomin gauntlets
+            28760, -- Warpriest of saradomin boots
+            28772, -- Warpriest of saradomin cape
+            25040, -- zilyana notes
+            33833, -- pet
+        },
+        Portal = 0,
+        Locations = {
+            Outside = {x1 = 0, x2 = 0, y1 = 0, y2 = 0},
+            BetweenDoors = {x1 = 0, x2 = 0, y1 = 0, y2 = 0}
+        },
+        HighAlchDrops = {},
+        DisassembleDrops = {
+            28757, -- Warpriest of saradomin gauntlets
+            28760, -- Warpriest of saradomin boots
+            28772, -- Warpriest of saradomin cape
+            28769, -- warpriest of saradomin Helm
+        },
+        AdjustPosition = nil
     }
 }
 
@@ -281,6 +338,14 @@ end
 
 local function HighAlchDrops() 
     ClueUtils.HighAlch(SelectedBoss.HighAlchDrops)
+end
+
+local function DisassembleDrops() 
+    if CleanBossRoom() then 
+        if ClueUtils.Disassemble(SelectedBoss.DisassembleDrops) then 
+            API.RandomSleep2(1800,0,300)
+        end
+    end
 end
 
 local function Bank() 
