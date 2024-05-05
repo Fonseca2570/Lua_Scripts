@@ -393,6 +393,9 @@ function ClueUtils.WarRetreatPreBoss(inventoryItems, renewFamiliar, pouch)
 
             if not ClueUtils.CheckItems(inventoryItems) then 
                 return false -- load last preset dind't work so it fails
+            end
+        end
+    end
 
 
     if API.GetHPrecent() < 90 then 

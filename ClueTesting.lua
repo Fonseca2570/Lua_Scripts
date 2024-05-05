@@ -6,6 +6,7 @@ local startTime, afk, instanceStart = os.time(), os.time(), nil
 local MAX_IDLE_TIME_MINUTES = 5
 local fail = 0
 
+API.SetDrawTrackedSkills(true)
 
 local Bosses = {
     Bandos = {
@@ -58,11 +59,11 @@ local Bosses = {
         AdjustPosition = nil
     },
     Saradomin = {
-        OutsideDoor = 0,
-        InsideDoor = 0,
-        Boss = 0,
-        Minions = {0,0,0},
-        SumBetweenDoors = 0,
+        OutsideDoor = 84026,
+        InsideDoor = 26427,
+        Boss = 6247,
+        Minions = {6248,6252,6250},
+        SumBetweenDoors = 9,
         Drops = {
             995, --coins
             11710, -- Godsword shard 1
@@ -90,11 +91,12 @@ local Bosses = {
             28772, -- Warpriest of saradomin cape
             25040, -- zilyana notes
             33833, -- pet
+            7946, -- monkfish
         },
-        Portal = 0,
+        Portal = 114774,
         Locations = {
-            Outside = {x1 = 0, x2 = 0, y1 = 0, y2 = 0},
-            BetweenDoors = {x1 = 0, x2 = 0, y1 = 0, y2 = 0}
+            Outside = {x1 = 2910, x2 = 2930, y1 = 5265, y2 = 5280},
+            BetweenDoors = {x1 = 2915, x2 = 2925, y1 = 5257, y2 = 5263}
         },
         HighAlchDrops = {},
         DisassembleDrops = {
@@ -121,7 +123,7 @@ local States = {
 }
 
 local currentState = States.Banking
-local SelectedBoss = Bosses.Bandos
+local SelectedBoss = Bosses.Saradomin
 local startXp = API.GetSkillXP("CONSTITUTION")
 
 -- GameState checks and idle
@@ -235,7 +237,7 @@ local function PressInsideDoor()
             return
         end
         API.DoAction_Object1(0x31, API.OFF_ACT_GeneralObject_route0, { SelectedBoss.InsideDoor },50)
-        API.RandomSleep2(600,200,300)
+        API.RandomSleep2(1200,200,300)
         API.WaitUntilMovingEnds()
         if API.Compare2874Status(12, false) then 
             API.KeyboardPress2(0x32, 0, 50) -- press 2 for instance encounter
@@ -383,7 +385,8 @@ end
 -- try to figure out current state
 local function UpdateState() 
     if not API.IsPlayerMoving_() and not API.CheckAnim(100) then 
-        if ClueUtils.AtLocation(SelectedBoss.Locations.Outside) or ClueUtils.AtLocation(SelectedBoss.Locations.BetweenDoors) then 
+        if ClueUtils.AtLocation(SelectedBoss.Locations.Outside) or ClueUtils.AtLocation(SelectedBoss.Locations.BetweenDoors) then
+            print("between the doors") 
             currentState = States.GoingToBoss
             return
         end
@@ -397,7 +400,7 @@ local function UpdateState()
         local outside = API.GetAllObjArray1({SelectedBoss.OutsideDoor}, 10, {12})[1]
         
         if inside ~= nil and outside ~= nil then 
-            if inside.Distance + outside.Distance == SelectedBoss.SumBetweenDoors then 
+            if inside.Distance + outside.Distance <= SelectedBoss.SumBetweenDoors then 
                 currentState = States.GoingToBoss
                 return
             end
@@ -446,6 +449,7 @@ while API.Read_LoopyLoop() do
         PrioritizeBoss()
         Bank()
         Loot()
+        DisassembleDrops()
         goto continue
     end
 
