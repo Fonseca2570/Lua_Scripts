@@ -106,6 +106,55 @@ local Bosses = {
             28769, -- warpriest of saradomin Helm
         },
         AdjustPosition = nil
+    },
+    Zamorak = {
+        OutsideDoor = 0,
+        InsideDoor = 0,
+        Boss = 0,
+        Minions = {6204,6206,6208},
+        SumBetweenDoors = 0,
+        Drops = {
+            995, --coins
+            11710, -- Godsword shard 1
+            11712, -- Godsword shard 2
+            11714, -- Godsword shard 3
+            42008, -- Sealed clue scroll (hard)
+            42009, -- Sealed clue scroll (elite)
+            18778, -- Effigy  
+            20269, -- noted infernal ashes
+            246, -- noted wine of Zamorak
+            24992, -- hood of subjugation
+            24995, -- garb of subjugation
+            24998, -- gown of subjugation
+            25007, -- gloves of subjugation
+            25004, -- boots of subjugation
+            25001, -- ward of subjugation
+            11716, -- zamorakian spear 
+            11708, -- zamorak hilt
+            28787, -- warpriest of zamorak helm
+            28781, -- warpriest of zamorak cuirass
+            28784, -- warpriest of zamorak greaves
+            28775, -- warpriest of zamorak gauntlets
+            28778, -- warpriest of zamorak boots
+            28790, -- warpriest of zamorak cape
+            25041, -- razulei´s Tale
+            33831, -- severed hoof
+            385, -- shark
+            7060, -- tuna potato
+        },
+        Portal = 0,
+        Locations = {
+            Outside = {x1 = 0, x2 = 0, y1 = 0, y2 = 0},
+            BetweenDoors = {x1 = 0, x2 = 0, y1 = 0, y2 = 0}
+        },
+        HighAlchDrops = {},
+        DisassembleDrops = {
+            28787, -- warpriest of zamorak helm
+            28775, -- warpriest of zamorak gauntlets
+            28778, -- warpriest of zamorak boots
+            28790, -- warpriest of zamorak cape
+        },
+        AdjustPosition = nil
     }
 }
 
@@ -122,7 +171,7 @@ local States = {
     InsideInstance = "Inside Instance"
 }
 
-local currentState = States.Banking
+local currentState = States.InsideInstance
 local SelectedBoss = Bosses.Saradomin
 local startXp = API.GetSkillXP("CONSTITUTION")
 
@@ -264,7 +313,12 @@ local function StartNewInstance()
         API.RandomSleep2(2600,500,1000)
     end
 
-    if API.GetAllObjArray1({SelectedBoss.InsideDoor}, 1, {12}) then 
+    if ClueUtils.AtLocation(SelectedBoss.Locations.BetweenDoors) then 
+        instanceStart = nil
+        return
+    end
+
+    if API.GetAllObjArray1({SelectedBoss.InsideDoor}, 3, {12}) then 
         API.DoAction_Object1(0x31, API.OFF_ACT_GeneralObject_route0, { SelectedBoss.InsideDoor },50)
         API.RandomSleep2(600,200,300)
         API.WaitUntilMovingEnds()
@@ -278,6 +332,11 @@ local function RejoinLastInstance()
         API.RandomSleep2(2600,500,1000)
     end
 
+    if ClueUtils.AtLocation(SelectedBoss.Locations.BetweenDoors) then 
+        instanceStart = nil
+        return
+    end
+
     if API.GetAllObjArray1({SelectedBoss.InsideDoor}, 1, {12}) then 
         API.DoAction_Object1(0x31, API.OFF_ACT_GeneralObject_route0, { SelectedBoss.InsideDoor },50)
         API.RandomSleep2(600,200,300)
@@ -288,6 +347,7 @@ end
 
 local function EnterInstance() 
     if instanceStart == nil then 
+        print("start new instance")
         instanceStart = os.time()
         StartNewInstance()
         return
@@ -295,11 +355,12 @@ local function EnterInstance()
 
     local timeDiff = os.difftime(os.time(), instanceStart)
     if timeDiff > 3600 then 
-        instanceStart = os.time()
-        StartNewInstance()
-        return
+        print("start new instance because time ran out")
+        instanceStart = nil
+        return EnterInstance()
     end
 
+    print("rejoin last istance: ", timeDiff)
     RejoinLastInstance()
 end
 
