@@ -59,13 +59,13 @@ while (API.Read_LoopyLoop()) do
     local level = API.GetSkillByName("WOODCUTTING").level
     if not API.CheckAnim(80) then 
         if level >= 92 then 
-            obj = findEnrich()
+            local obj = findEnrich()
             if obj ~= nil then 
-                API.API.DoAction_Object1(0x3b, API.OFF_ACT_GeneralObject_route0, {obj.Id}, 50)
+                API.DoAction_Object1(0x3b, API.OFF_ACT_GeneralObject_route0, {obj.Id + obj.Bool1}, 50)
                 API.RandomSleep2(2000, 600, 900)
             end
         else
-            obj = findNonEnrich()
+            local obj = findNonEnrich()
             if obj ~= nil then 
                 API.DoAction_Object1(0x3b, API.OFF_ACT_GeneralObject_route0, {obj.Id}, 50)
                 API.RandomSleep2(2000, 600, 900)
