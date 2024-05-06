@@ -237,6 +237,33 @@ local function timerHitZero()
     end
 end
 
+local validSession = {
+    InterfaceComp5.new(1186, 2, -1, -1, 0), InterfaceComp5.new(1186, 3, -1, 2, 0)
+}
+
+local function NoValidSessionFound() 
+    local serverMessage = API.ScanForInterfaceTest2Get(false, validSession)
+    if serverMessage and #serverMessage > 0 and serverMessage[1].textids then
+        local textids = serverMessage[1].textids
+        local startIndex, endIndex = string.find(textids, "No valid")
+        if startIndex then 
+            return true
+        end 
+
+        local startIndex, endIndex = string.find(textids, "You")
+        if startIndex then 
+            return true
+        end 
+
+        print("valid session found")
+
+        return false
+    else
+        print("No result or textids field not found.")
+    end
+end
+
+
 -- end of instance helper functions
 
 -- PreBoss function
@@ -288,6 +315,7 @@ local function PressInsideDoor()
         API.DoAction_Object1(0x31, API.OFF_ACT_GeneralObject_route0, { SelectedBoss.InsideDoor },50)
         API.RandomSleep2(1200,200,300)
         API.WaitUntilMovingEnds()
+        API.RandomSleep2(1200,200,300)
         if API.Compare2874Status(12, false) then 
             API.KeyboardPress2(0x32, 0, 50) -- press 2 for instance encounter
             API.RandomSleep2(600,100,300)
@@ -313,11 +341,6 @@ local function StartNewInstance()
         API.RandomSleep2(2600,500,1000)
     end
 
-    if ClueUtils.AtLocation(SelectedBoss.Locations.BetweenDoors) then 
-        instanceStart = nil
-        return
-    end
-
     if API.GetAllObjArray1({SelectedBoss.InsideDoor}, 3, {12}) then 
         API.DoAction_Object1(0x31, API.OFF_ACT_GeneralObject_route0, { SelectedBoss.InsideDoor },50)
         API.RandomSleep2(600,200,300)
@@ -333,7 +356,6 @@ local function RejoinLastInstance()
     end
 
     if ClueUtils.AtLocation(SelectedBoss.Locations.BetweenDoors) then 
-        instanceStart = nil
         return
     end
 
@@ -346,22 +368,13 @@ local function RejoinLastInstance()
 end
 
 local function EnterInstance() 
-    if instanceStart == nil then 
-        print("start new instance")
-        instanceStart = os.time()
-        StartNewInstance()
-        return
-    end
-
-    local timeDiff = os.difftime(os.time(), instanceStart)
-    if timeDiff > 3600 then 
-        print("start new instance because time ran out")
-        instanceStart = nil
-        return EnterInstance()
-    end
-
-    print("rejoin last istance: ", timeDiff)
     RejoinLastInstance()
+    if NoValidSessionFound() then 
+        print("no valid session found trying to start a new one")
+        PressInsideDoor()
+        API.RandomSleep2(1200,100,300)
+        StartNewInstance()
+    end
 end
 
 -- end of pre boss functions
@@ -476,6 +489,7 @@ while API.Read_LoopyLoop() do
     API.DoRandomEvents()
     idleCheck()
     gameStateChecks()
+    DisassembleDrops()
     API.Write_ScripCuRunning0(currentState)
     if fail > 3 then 
         API.Write_LoopyLoop(false)
@@ -510,7 +524,6 @@ while API.Read_LoopyLoop() do
         PrioritizeBoss()
         Bank()
         Loot()
-        DisassembleDrops()
         goto continue
     end
 
