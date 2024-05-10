@@ -496,7 +496,7 @@ while API.Read_LoopyLoop() do
     end
 
     if currentState == States.Banking then 
-        if ClueUtils.WarRetreatPreBoss(preset, false, 0) then 
+        if ClueUtils.WarRetreatPreBoss(preset, true, 12790) then 
             PressPortal()
             API.RandomSleep2(1000,500,1000)
             API.WaitUntilMovingEnds()
