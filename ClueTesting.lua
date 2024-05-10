@@ -425,7 +425,7 @@ local function DisassembleDrops()
 end
 
 local function Bank() 
-    if API.GetHPrecent() < 20 then 
+    if API.GetHPrecent() < 40 then 
         if TeleportToWarRetreat() then 
             currentState = States.Banking
             API.RandomSleep2(1200,0,300)

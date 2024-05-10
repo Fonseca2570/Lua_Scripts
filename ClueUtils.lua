@@ -378,7 +378,7 @@ function ClueUtils.WarRetreatPreBoss(inventoryItems, renewFamiliar, pouch)
     end
 
 
-    if renewFamiliar then 
+    if renewFamiliar and DeadUtils.getFamiliarDuration() < 5 then 
         if not ClueUtils.RenewFamiliar(pouch) then 
             return false
         end
