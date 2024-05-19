@@ -385,8 +385,8 @@ function ClueUtils.WarRetreatPreBoss(inventoryItems, renewFamiliar, pouch)
     end
 
     for _, obj in pairs(inventoryItems) do 
-        count = API.InvItemcount_1(obj.item)
-        if count < obj.count then 
+        local count = API.InvItemcount_1(obj.item)
+        if not (count == obj.count) then 
             API.DoAction_Object_string1(0x33,API.OFF_ACT_GeneralObject_route3,{ "Bank chest" }, 50, true) -- load last preset
             API.RandomSleep2(1200,0,200) -- 
             API.WaitUntilMovingEnds()

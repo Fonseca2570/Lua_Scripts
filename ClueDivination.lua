@@ -24,7 +24,7 @@ local Abilites = {
 }
 
 local Configs = {
-    UseVacum = true
+    UseVacum = false
 }
 
 -- Define the wisp IDs for each type of wisp
@@ -111,7 +111,7 @@ end
 -- Convert memories at the rift
 local function convertMemories()
     print("Converting memories...")
-    if API.DoAction_Object1(0xc8, API.OFF_ACT_GeneralObject_route0, { riftIds.normal , riftIds.cache }, 50) then
+    if API.DoAction_Object_valid1(0xc8, API.OFF_ACT_GeneralObject_route0, { riftIds.normal , riftIds.cache }, 50, true) then
         API.RandomSleep2(1200,500,1000)
     end
 end
