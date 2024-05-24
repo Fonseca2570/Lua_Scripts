@@ -38,7 +38,7 @@ ClueUtils.Abilities = {
 }
 
 ClueUtils.Locations = {
-    WarRetreat = {x1 = 3279, x2 = 3309, y1 = 10113, y2 = 10143}
+    WarRetreat = {x1 = 3270, x2 = 3325, y1 = 10113, y2 = 10163}
 }
 
 ClueUtils.BuffBar = {
@@ -354,8 +354,8 @@ end
 ---@return boolean
 function ClueUtils.CheckItems(inventoryItems) 
     for _, obj in pairs(inventoryItems) do 
-        count = API.InvItemcount_1(obj.item)
-        if count < obj.count then 
+        local count = API.InvItemcount_1(obj.item)
+        if not (count == obj.count) then 
             return false
         end
     end
