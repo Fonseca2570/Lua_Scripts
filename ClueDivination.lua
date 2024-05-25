@@ -145,7 +145,7 @@ while API.Read_LoopyLoop() do
                 API.RandomSleep2(1200,100,300)
             end
         else 
-            local enriched = API.GetAllObjArrayInteract({enrichedId}, 20, {1})
+            local enriched = API.GetAllObjArrayInteract(enrichedId, 20, {1})
             if #enriched > 0 then 
                 harvest(enrichedId)
             else
