@@ -428,6 +428,27 @@ function ClueUtils.Disassemble(items)
     return false
 end
 
+--- Is non interface interface open
+---@return boolean
+function ClueUtils.isNonInterfaceOpen()
+    return API.VB_FindPSett(2874, 1, 0).state == 0
+end
+
+--- Loop to check if the player is interacting
+---@param id number
+---@param loops number
+---@return boolean
+function ClueUtils.IsTargetingMobIDWithLoop(id, loop) 
+    for i=loop,0,-1 do 
+        local interact = API.Local_PlayerInterActingWith_Id()
+        if interact == id then 
+            return true
+        end
+    end
+    
+    return false
+end
+
 return ClueUtils
 
 -- walk with multiple steps use API.DoAction_WalkerW(normal_tile)
