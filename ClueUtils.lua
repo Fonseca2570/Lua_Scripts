@@ -444,6 +444,15 @@ function ClueUtils.IsTargetingMobIDWithLoop(id, loop)
         if interact == id then 
             return true
         end
+
+        if API.VB_FindPSettinOrder(11625, 0).state == -1 then
+            return true
+        end
+    end
+
+    local boss = API.GetAllObjArray1({id}, 50 , {1})[1]
+    if boss ~= nil and boss.Life == 0 then 
+        return true
     end
     
     return false
