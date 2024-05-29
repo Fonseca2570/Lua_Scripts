@@ -34,7 +34,8 @@ ClueUtils.Abilities = {
     CommandGhost = API.GetABs_name1("Command Vengeful Ghost"),
     CommandSkeleton = API.GetABs_name1("Command Skeleton Warrior"),
     HighAlch = API.GetABs_name1("High Level Alchemy"),
-    Disassemble = API.GetABs_name1("Disassemble")
+    Disassemble = API.GetABs_name1("Disassemble"),
+    SuperAntiFire = API.GetABs_name1("Super antifire potion")
 }
 
 ClueUtils.Locations = {
@@ -49,7 +50,8 @@ ClueUtils.BuffBar = {
     LivingDeath = 30078,
     Necrosis = 30101,
     Souls = 30123,
-    Skeleton = 30102
+    Skeleton = 30102,
+    antifire = 30093
 }
 
 ClueUtils.DeBuffBar = {
