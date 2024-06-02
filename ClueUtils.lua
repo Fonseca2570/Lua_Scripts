@@ -460,6 +460,20 @@ function ClueUtils.IsTargetingMobIDWithLoop(id, loop)
     return false
 end
 
+--- Loop to check id of interacting != 0
+---@param loops number
+---@return number
+function ClueUtils.IsTargetingMob(loop) 
+    for i=loop,0,-1 do 
+        local interact = API.Local_PlayerInterActingWith_Id()
+        if interact ~= 0 then 
+            return interact
+        end
+    end
+    
+    return 0
+end
+
 return ClueUtils
 
 -- walk with multiple steps use API.DoAction_WalkerW(normal_tile)
