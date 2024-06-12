@@ -35,7 +35,8 @@ ClueUtils.Abilities = {
     CommandSkeleton = API.GetABs_name1("Command Skeleton Warrior"),
     HighAlch = API.GetABs_name1("High Level Alchemy"),
     Disassemble = API.GetABs_name1("Disassemble"),
-    SuperAntiFire = API.GetABs_name1("Super antifire potion")
+    SuperAntiFire = API.GetABs_name1("Super antifire potion"),
+    Devotion = API.GetABs_name1("Devotion"),
 }
 
 ClueUtils.Locations = {
@@ -51,7 +52,8 @@ ClueUtils.BuffBar = {
     Necrosis = 30101,
     Souls = 30123,
     Skeleton = 30102,
-    antifire = 30093
+    antifire = 30093,
+    Devotion = 21665, 
 }
 
 ClueUtils.DeBuffBar = {
@@ -78,6 +80,11 @@ function ClueUtils.DoAbility(ability)
     end
 end
 
+---@param ability Abilitybar
+function ClueUtils.DoAbilityForced(ability) 
+    API.DoAction_Ability_Direct(ability, 1, API.OFF_ACT_GeneralInterface_route)
+end
+
 -- used for high alch
 ---@param ability Abilitybar
 ---@return boolean
@@ -100,6 +107,10 @@ function ClueUtils.OpenInventoryIfNeeded()
     if not API.InventoryInterfaceCheckvarbit() then 
         API.KeyboardPress2(0x42,50,150) -- press b
     end
+end
+
+function ClueUtils.isAbilityQueued()
+    return API.VB_FindPSettinOrder(5861, 0).state ~= 0
 end
 
 -- can be used to activate prayer or buffbar like darkness
@@ -286,7 +297,7 @@ function ClueUtils.LivingDeathRotation()
 end 
 
 function ClueUtils.NecroBestAbility() 
-    if DeadUtils.isAbilityQueued() then 
+    if ClueUtils.isAbilityQueued() then 
         return
     end
 

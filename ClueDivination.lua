@@ -66,6 +66,7 @@ local startXp = API.GetSkillXP("DIVINATION")
 local function checkXpIncrease() 
     local newXp = API.GetSkillXP("DIVINATION")
     if newXp == startXp then 
+        print("no xp increase in 5 minutes")
         API.Write_LoopyLoop(false)
     else
         startXp = newXp
