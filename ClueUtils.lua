@@ -346,6 +346,48 @@ function ClueUtils.NecroBestAbility()
     ClueUtils.DoAbility(ClueUtils.Abilities.Necromancy)
 end
 
+function ClueUtils.NecroBestAbilityAvoidUltimates() 
+    if ClueUtils.isAbilityQueued() then 
+        return
+    end
+
+    if not ClueUtils.ConjuresAlive() then 
+        if ClueUtils.DoAbility(ClueUtils.Abilities.ArmyConjure) then 
+            return
+        end
+    end
+
+    if ClueUtils.SoulStack >= 3 then 
+        if ClueUtils.DoAbility(ClueUtils.Abilities.VolleyOfSouls) then 
+            return
+        end
+    end
+
+    if ClueUtils.DoAbility(ClueUtils.Abilities.CommandGhost) then 
+        return
+    end
+
+    if ClueUtils.DoAbility(ClueUtils.Abilities.CommandSkeleton) then 
+        return
+    end
+
+    if ClueUtils.NecroStacks() >= 12 then 
+        if ClueUtils.DoAbility(ClueUtils.Abilities.FingerDeath) then 
+            return
+        end
+    end
+
+    if ClueUtils.DoAbility(ClueUtils.Abilities.TouchOfDeath) then 
+        return
+    end
+
+    if ClueUtils.DoAbility(ClueUtils.Abilities.SoulSap) then 
+        return
+    end
+
+    ClueUtils.DoAbility(ClueUtils.Abilities.Necromancy)
+end
+
 
 ---@param items userdata --vector<number>
 ---@return boolean
