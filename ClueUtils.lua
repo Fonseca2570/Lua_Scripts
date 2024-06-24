@@ -538,7 +538,7 @@ function ClueUtils.NecroBestAbility()
         end
     end
 
-    if ClueUtils.SoulStack >= 3 then 
+    if ClueUtils.SoulStack() >= 3 then 
         if ClueUtils.DoAbility(ClueUtils.Abilities.NECRO.VolleyOfSouls) then 
             return
         end
@@ -580,7 +580,7 @@ function ClueUtils.NecroBestAbilityAvoidUltimates()
         end
     end
 
-    if ClueUtils.SoulStack >= 3 then 
+    if ClueUtils.SoulStack() >= 3 then 
         if ClueUtils.DoAbility(ClueUtils.Abilities.NECRO.VolleyOfSouls) then 
             return
         end
@@ -591,6 +591,7 @@ function ClueUtils.NecroBestAbilityAvoidUltimates()
     end
 
     if ClueUtils.DoAbility(ClueUtils.Abilities.NECRO.CommandSkeleton) then 
+        print("skeleton")
         return
     end
 
