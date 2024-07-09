@@ -231,7 +231,7 @@ ClueUtils.Abilities = {
     },
 
     SUPPORT = {
-        HolyOverload = API.GetABs_name1("Holy Overload Potion"), -- TODO needs to be confirmed
+        HolyOverload = API.GetABs_name1("Holy overload potion"), -- TODO needs to be confirmed
     },
 
     -- This is here just because of compatibility
@@ -262,7 +262,8 @@ ClueUtils.Abilities = {
 }
 
 ClueUtils.Locations = {
-    WarRetreat = {x1 = 3270, x2 = 3325, y1 = 10113, y2 = 10163}
+    WarRetreat = {x1 = 3270, x2 = 3325, y1 = 10113, y2 = 10163},
+    DeathOffice = {x1 = 400, x2 = 430, y1 = 670, y2 = 680}
 }
 
 ClueUtils.BuffBar = {
@@ -277,6 +278,7 @@ ClueUtils.BuffBar = {
     antifire = 30093,
     Devotion = 21665, 
     Overload = 26093,
+    Sorrow = 30771,
 }
 
 ClueUtils.DeBuffBar = {
@@ -288,6 +290,10 @@ ClueUtils.DeBuffBar = {
 ---@return boolean
 function ClueUtils.IsAbilityAvailable(ability) 
     local update = API.GetABs_name1(ability.name)
+    if ability.name == "Command Skeleton Warrior" then 
+        print(ability.name)
+        print(update.name)
+    end
     return update ~= nil and update.enabled and update.cooldown_timer == 0
 end
 
@@ -362,6 +368,7 @@ end
 
 function ClueUtils.IncreasePrayerPoints() 
     local pray = API.GetPrayPrecent()
+    print(pray)
     local elvenCD = API.DeBuffbar_GetIDstatus(ClueUtils.DeBuffBar.ElvenShard, false)
     local elvenFound = API.InvItemcount_1(ClueUtils.DeBuffBar.ElvenShard)
     if pray < 50 then 
@@ -373,9 +380,30 @@ function ClueUtils.IncreasePrayerPoints()
     end
 end
 
+function ClueUtils.IncreasePrayerPoints2() 
+    local pray = API.GetPray_()
+    print(pray)
+    local elvenCD = API.DeBuffbar_GetIDstatus(ClueUtils.DeBuffBar.ElvenShard, false)
+    local elvenFound = API.InvItemcount_1(ClueUtils.DeBuffBar.ElvenShard)
+    if pray < 500 then 
+        if not elvenCD.found and elvenFound > 0 then 
+            API.DoAction_Inventory1(ClueUtils.DeBuffBar.ElvenShard, 43358, 1, API.OFF_ACT_GeneralInterface_route)
+        else 
+            ClueUtils.DoAbility(ClueUtils.Abilities.SuperRestore)
+        end
+    end
+end
+
 function ClueUtils.EatFood() 
     local hp = API.GetHPrecent()
     if hp < 60 then 
+        ClueUtils.DoAbility(ClueUtils.Abilities.EatFood)
+    end
+end
+
+function ClueUtils.EatFood2() 
+    local hp = API.GetHP_()
+    if hp < 6000 then 
         ClueUtils.DoAbility(ClueUtils.Abilities.EatFood)
     end
 end
@@ -525,6 +553,7 @@ function ClueUtils.NecroBestAbility()
     end
 
     if ClueUtils.InLivingDeath() then 
+        -- TODO check if has target to not waste time of rotation
         return ClueUtils.LivingDeathRotation()
     end
 
@@ -586,12 +615,15 @@ function ClueUtils.NecroBestAbilityAvoidUltimates()
         end
     end
 
+    print("ghost")
+    print(ClueUtils.DoAbility(ClueUtils.Abilities.NECRO.CommandGhost))
     if ClueUtils.DoAbility(ClueUtils.Abilities.NECRO.CommandGhost) then 
         return
     end
 
+    print("skeleton")
+    print(ClueUtils.DoAbility(ClueUtils.Abilities.NECRO.CommandSkeleton))
     if ClueUtils.DoAbility(ClueUtils.Abilities.NECRO.CommandSkeleton) then 
-        print("skeleton")
         return
     end
 
