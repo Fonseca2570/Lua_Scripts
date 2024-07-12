@@ -783,6 +783,16 @@ function ClueUtils.IsTargetingMob(loop)
     return 0
 end
 
+--- Move and target
+--- @param point wpoint
+--- @param target number
+function ClueUtils.MoveAndTarget(wpoint, mob)
+    API.DoAction_Tile(wpoint)
+    API.RandomSleep2(600,0,50)
+    API.WaitUntilMovingEnds(2, 2)
+    API.DoAction_NPC(0x2a,API.OFF_ACT_AttackNPC_route,{mob},50);
+end
+
 return ClueUtils
 
 -- walk with multiple steps use API.DoAction_WalkerW(normal_tile)
