@@ -311,7 +311,9 @@ end
 
 ---@param ability Abilitybar
 function ClueUtils.DoAbilityForced(ability) 
-    API.DoAction_Ability_Direct(ability, 1, API.OFF_ACT_GeneralInterface_route)
+    if ClueUtils.IsAbilityAvailable(ability) then 
+        API.DoAction_Ability_Direct(ability, 1, API.OFF_ACT_GeneralInterface_route)
+    end 
 end
 
 -- used for high alch
@@ -644,6 +646,19 @@ function ClueUtils.NecroBestAbilityAvoidUltimates()
     ClueUtils.DoAbility(ClueUtils.Abilities.NECRO.Necromancy)
 end
 
+function ClueUtils.NecroBestAbilityAvoidUltimatesRevo() 
+    if ClueUtils.SoulStack() >= 3 then 
+        if ClueUtils.DoAbility(ClueUtils.Abilities.NECRO.VolleyOfSouls) then 
+            return
+        end
+    end
+
+    if ClueUtils.NecroStacks() >= 6 then 
+        if ClueUtils.DoAbility(ClueUtils.Abilities.NECRO.FingerDeath) then 
+            return
+        end
+    end
+end
 
 ---@param items userdata --vector<number>
 ---@return boolean
