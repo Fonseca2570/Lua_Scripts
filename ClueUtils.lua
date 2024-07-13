@@ -268,6 +268,7 @@ ClueUtils.Locations = {
 
 ClueUtils.BuffBar = {
     prayMageAncient = 26041,
+    prayMeleeAncient =  26040,
     soulsplit = 26033,
     Ressonance = 14222,
     Darkness = 30122,
@@ -647,6 +648,10 @@ function ClueUtils.NecroBestAbilityAvoidUltimates()
 end
 
 function ClueUtils.NecroBestAbilityAvoidUltimatesRevo() 
+    if ClueUtils.isAbilityQueued() then 
+        return
+    end
+
     if ClueUtils.SoulStack() >= 3 then 
         if ClueUtils.DoAbility(ClueUtils.Abilities.NECRO.VolleyOfSouls) then 
             return
