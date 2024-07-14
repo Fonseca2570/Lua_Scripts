@@ -284,7 +284,8 @@ ClueUtils.BuffBar = {
 
 ClueUtils.DeBuffBar = {
     Excalibur = 14632,
-    ElvenShard = 43358
+    ElvenShard = 43358,
+    SpecialAtkNecro = 55524,
 }
 
 ---@param ability Abilitybar
@@ -662,6 +663,32 @@ function ClueUtils.NecroBestAbilityAvoidUltimatesRevo()
         if ClueUtils.DoAbility(ClueUtils.Abilities.NECRO.FingerDeath) then 
             return
         end
+    end
+end
+
+function ClueUtils.AOENecro() 
+    if ClueUtils.isAbilityQueued() then 
+        return
+    end
+
+    if ClueUtils.DoAbility(ClueUtils.Abilities.NECRO.ThreadsOfFate) then 
+        return
+    end
+
+    local sAtk = API.DeBuffbar_GetIDstatus(ClueUtils.DeBuffBar.SpecialAtkNecro, false)
+    if not sAtk.found then 
+        if ClueUtils.DoAbility(ClueUtils.Abilities.SpecialAttack) then 
+            return
+        end
+    end
+
+    
+    if ClueUtils.DoAbility(ClueUtils.Abilities.NECRO.SpectralScythe) then 
+        return
+    end
+
+    if ClueUtils.DoAbility(ClueUtils.Abilities.NECRO.SoulSap) then 
+        return
     end
 end
 
