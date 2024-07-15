@@ -231,7 +231,7 @@ ClueUtils.Abilities = {
     },
 
     SUPPORT = {
-        HolyOverload = API.GetABs_name1("Holy overload potion"), -- TODO needs to be confirmed
+        HolyOverload = API.GetABs_name1("Holy overload potion"),
     },
 
     -- This is here just because of compatibility
@@ -267,6 +267,7 @@ ClueUtils.Locations = {
 }
 
 ClueUtils.BuffBar = {
+    prayRangeAncient = 26044,
     prayMageAncient = 26041,
     prayMeleeAncient =  26040,
     soulsplit = 26033,
