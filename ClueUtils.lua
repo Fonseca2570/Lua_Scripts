@@ -841,6 +841,41 @@ function ClueUtils.MoveAndTarget(wpoint, mob)
     API.DoAction_NPC(0x2a,API.OFF_ACT_AttackNPC_route,{mob},50);
 end
 
+---@param ability Abilitybar
+function ClueUtils.PrayerFlicking(ability) 
+    if ability.name == ClueUtils.Abilities.CURSES.DeflectMelee.name then 
+        if not DeadUtils.isDeflectMelee() then 
+            return ClueUtils.DoAbility(ClueUtils.Abilities.CURSES.DeflectMelee)
+        end
+
+        return
+    end
+
+    if ability.name == ClueUtils.Abilities.CURSES.DeflectMagic.name then 
+        if not DeadUtils.isDeflectMagic() then 
+            return ClueUtils.DoAbility(ClueUtils.Abilities.CURSES.DeflectMagic)
+        end
+
+        return
+    end
+
+    if ability.name == ClueUtils.Abilities.CURSES.DeflectRanged.name then 
+        if not DeadUtils.isDeflectRange() then 
+            return ClueUtils.DoAbility(ClueUtils.Abilities.CURSES.DeflectRanged)
+        end
+
+        return
+    end
+
+    if ability.name == ClueUtils.Abilities.CURSES.SoulSplit.name then 
+        if not DeadUtils.isSoulSplitting() then 
+            return ClueUtils.DoAbility(ClueUtils.Abilities.CURSES.SoulSplit)
+        end
+
+        return
+    end
+end
+
 return ClueUtils
 
 -- walk with multiple steps use API.DoAction_WalkerW(normal_tile)
