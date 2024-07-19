@@ -672,6 +672,12 @@ function ClueUtils.AOENecro()
         return
     end
 
+    if API.GetAddreline_() >= 90 then 
+        if ClueUtils.DoAbility(ClueUtils.Abilities.NECRO.Bloat) then 
+            return
+        end
+    end
+
     if ClueUtils.DoAbility(ClueUtils.Abilities.NECRO.ThreadsOfFate) then 
         return
     end
@@ -681,11 +687,6 @@ function ClueUtils.AOENecro()
         if ClueUtils.DoAbility(ClueUtils.Abilities.SpecialAttack) then 
             return
         end
-    end
-
-    
-    if ClueUtils.DoAbility(ClueUtils.Abilities.NECRO.SpectralScythe) then 
-        return
     end
 
     if ClueUtils.DoAbility(ClueUtils.Abilities.NECRO.SoulSap) then 
