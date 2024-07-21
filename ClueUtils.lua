@@ -232,6 +232,7 @@ ClueUtils.Abilities = {
 
     SUPPORT = {
         HolyOverload = API.GetABs_name1("Holy overload potion"),
+        Adrenaline = API.GetABs_name1("Super adrenaline potion"),
     },
 
     -- This is here just because of compatibility
@@ -293,10 +294,6 @@ ClueUtils.DeBuffBar = {
 ---@return boolean
 function ClueUtils.IsAbilityAvailable(ability) 
     local update = API.GetABs_name1(ability.name)
-    if ability.name == "Command Skeleton Warrior" then 
-        print(ability.name)
-        print(update.name)
-    end
     return update ~= nil and update.enabled and update.cooldown_timer == 0
 end
 
@@ -854,7 +851,7 @@ function ClueUtils.PrayerFlicking(ability)
 
     if ability.name == ClueUtils.Abilities.CURSES.DeflectMagic.name then 
         if not DeadUtils.isDeflectMagic() then 
-            return ClueUtils.DoAbility(ClueUtils.Abilities.CURSES.DeflectMagic)
+            return ClueUtils.DoAbilityForced(ClueUtils.Abilities.CURSES.DeflectMagic)
         end
 
         return
