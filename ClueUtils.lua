@@ -262,7 +262,7 @@ ClueUtils.Abilities = {
     Devotion = API.GetABs_name1("Devotion"),
 }
 
-ClueUtils.AbilitesID = {
+ClueUtils.AbilitiesID = {
     Necro = {
         ConjureUndeadArmy = 32988,
         SoulSap = 30080,
@@ -476,7 +476,7 @@ function ClueUtils.IncreasePrayerPoints()
         if not elvenCD.found and elvenFound > 0 then 
             API.DoAction_Inventory1(ClueUtils.DeBuffBar.ElvenShard, 43358, 1, API.OFF_ACT_GeneralInterface_route)
         else 
-            ClueUtils.DoAbility2(ClueUtils.AbilitesID.Support.SuperRestore)
+            ClueUtils.DoAbility2(ClueUtils.AbilitiesID.Support.SuperRestore)
         end
     end
 end
@@ -498,14 +498,14 @@ end
 function ClueUtils.EatFood() 
     local hp = API.GetHPrecent()
     if hp < 60 then 
-        ClueUtils.DoAbility2(ClueUtils.AbilitesID.HP.EatFood)
+        ClueUtils.DoAbility2(ClueUtils.AbilitiesID.HP.EatFood)
     end
 end
 
 function ClueUtils.EatFood2() 
     local hp = API.GetHP_()
     if hp < 6000 then 
-        ClueUtils.DoAbility2(ClueUtils.AbilitesID.HP.EatFood)
+        ClueUtils.DoAbility2(ClueUtils.AbilitiesID.HP.EatFood)
     end
 end
 
@@ -769,23 +769,23 @@ function ClueUtils.AOENecro()
     end
 
     if API.GetAddreline_() >= 90 then 
-        if ClueUtils.DoAbility2(ClueUtils.AbilitesID.Necro.Bloat) then 
+        if ClueUtils.DoAbility2(ClueUtils.AbilitiesID.Necro.Bloat) then 
             return
         end
     end
 
-    if ClueUtils.DoAbility2(ClueUtils.AbilitesID.Necro.ThreadsOfFate) then 
+    if ClueUtils.DoAbility2(ClueUtils.AbilitiesID.Necro.ThreadsOfFate) then 
         return
     end
 
     local sAtk = API.DeBuffbar_GetIDstatus(ClueUtils.DeBuffBar.SpecialAtkNecro, false)
     if not sAtk.found then 
-        if ClueUtils.DoAbility2(ClueUtils.AbilitesID.HP.SpecialAtk) then 
+        if ClueUtils.DoAbility2(ClueUtils.AbilitiesID.HP.SpecialAtk) then 
             return
         end
     end
 
-    if ClueUtils.DoAbility2(ClueUtils.AbilitesID.Necro.SoulSap) then 
+    if ClueUtils.DoAbility2(ClueUtils.AbilitiesID.Necro.SoulSap) then 
         return
     end
 end
@@ -940,33 +940,33 @@ end
 
 ---@param id number
 function ClueUtils.PrayerFlicking(id) 
-    if id == ClueUtils.AbilitesID.Curses.DeflectMelee then 
+    if id == ClueUtils.AbilitiesID.Curses.DeflectMelee then 
         if not DeadUtils.isDeflectMelee() then 
-            return ClueUtils.DoAbility2(ClueUtils.AbilitesID.Curses.DeflectMelee)
+            return ClueUtils.DoAbility2(ClueUtils.AbilitiesID.Curses.DeflectMelee)
         end
 
         return
     end
 
-    if id == ClueUtils.AbilitesID.Curses.DeflectMagic then 
+    if id == ClueUtils.AbilitiesID.Curses.DeflectMagic then 
         if not DeadUtils.isDeflectMagic() then 
-            return ClueUtils.DoAbility2(ClueUtils.AbilitesID.Curses.DeflectMagic)
+            return ClueUtils.DoAbility2(ClueUtils.AbilitiesID.Curses.DeflectMagic)
         end
 
         return
     end
 
-    if id == ClueUtils.AbilitesID.Curses.DeflectRange then 
+    if id == ClueUtils.AbilitiesID.Curses.DeflectRange then 
         if not DeadUtils.isDeflectRange() then 
-            return ClueUtils.DoAbility2(ClueUtils.AbilitesID.Curses.DeflectRange)
+            return ClueUtils.DoAbility2(ClueUtils.AbilitiesID.Curses.DeflectRange)
         end
 
         return
     end
 
-    if id == ClueUtils.AbilitesID.Curses.SoulSplit then 
+    if id == ClueUtils.AbilitiesID.Curses.SoulSplit then 
         if not DeadUtils.isSoulSplitting() then 
-            return ClueUtils.DoAbility2(ClueUtils.AbilitesID.Curses.SoulSplit)
+            return ClueUtils.DoAbility2(ClueUtils.AbilitiesID.Curses.SoulSplit)
         end
 
         return
