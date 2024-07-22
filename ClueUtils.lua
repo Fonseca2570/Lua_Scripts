@@ -328,7 +328,8 @@ ClueUtils.Potions = {
 
 ClueUtils.Locations = {
     WarRetreat = {x1 = 3270, x2 = 3325, y1 = 10113, y2 = 10163},
-    DeathOffice = {x1 = 400, x2 = 430, y1 = 670, y2 = 680}
+    DeathOffice = {x1 = 400, x2 = 430, y1 = 670, y2 = 680},
+    AnacroniaLoadstone = {x1 = 5400, x2 = 5500, y1 = 2250, y2 = 2400},
 }
 
 ClueUtils.BuffBar = {
