@@ -974,6 +974,58 @@ function ClueUtils.PrayerFlicking(id)
     end
 end
 
+function ClueUtils.VBChecks(ids)
+    if API.GetPrayPrecent() == 0 then 
+        print("prayer is zero")
+        return false
+    end
+    
+    for _, id in pairs(ids) do 
+        local ability = API.GetABs_id(id)
+        if ability == nil then 
+            print("failed to check id: ", id)
+            return false
+        end
+
+        if ability.id ~= id then 
+            print("failed to check id: ", id)
+            return false
+        end
+    end
+
+    ClueUtils.DoAbility2(ClueUtils.AbilitiesID.Curses.DeflectMagic)
+    API.RandomSleep2(1200,0,0)
+    if not DeadUtils.isDeflectMagic() then 
+        print("is not deflect magic")
+        return false
+    end
+
+    ClueUtils.DoAbility2(ClueUtils.AbilitiesID.Curses.DeflectRange)
+    API.RandomSleep2(1200,0,0)
+    if not DeadUtils.isDeflectRange() then 
+        print("is not deflect range")
+        return false
+    end
+
+    ClueUtils.DoAbility2(ClueUtils.AbilitiesID.Curses.DeflectMelee)
+    API.RandomSleep2(1200,0,0)
+    if not DeadUtils.isDeflectMelee() then 
+        print("is not deflect melee")
+        return false
+    end
+
+    ClueUtils.DoAbility2(ClueUtils.AbilitiesID.Curses.SoulSplit)
+    API.RandomSleep2(1200,0,0)
+    if not DeadUtils.isSoulSplitting() then 
+        print("is not soulsplitting")
+        return false
+    end
+
+    ClueUtils.DeactivatePrayer(ClueUtils.AbilitiesID.Curses.SoulSplit, ClueUtils.BuffBar.soulsplit)
+
+    return true
+end
+
 return ClueUtils
 
 -- walk with multiple steps use API.DoAction_WalkerW(normal_tile)
