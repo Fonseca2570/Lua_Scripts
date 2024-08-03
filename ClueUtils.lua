@@ -654,8 +654,7 @@ function ClueUtils.NecroBestAbility()
         return
     end
 
-    if ClueUtils.InLivingDeath() then 
-        -- TODO check if has target to not waste time of rotation
+    if ClueUtils.InLivingDeath() and ClueUtils.IsTargetingMob() ~= 0 then 
         return ClueUtils.LivingDeathRotation()
     end
 
