@@ -810,13 +810,25 @@ end
 ---@return boolean
 function ClueUtils.CheckItems(inventoryItems) 
     for _, obj in pairs(inventoryItems) do 
-        local count = API.InvItemcount_1(obj.item)
-        if not (count == obj.count) then 
+        local count = obj.count
+        for _, item in pairs(obj.items) do 
+            local c = API.InvItemcount_1(item)
+            count = count - c
+        end
+        if count ~= 0 then 
             return false
         end
     end
 
     return true
+end
+
+function ClueUtils.IsPrayerOver90() 
+    return API.GetPrayPrecent() > 90
+end
+
+function ClueUtils.IsHPOver90() 
+    return API.GetHPrecent() > 90
 end
 
 ---@param inventoryItems userdata --vector<InventoryItems>
@@ -840,29 +852,36 @@ function ClueUtils.WarRetreatPreBoss(inventoryItems, renewFamiliar, pouch)
         end
     end
 
-    for _, obj in pairs(inventoryItems) do 
-        local count = API.InvItemcount_1(obj.item)
-        if not (count == obj.count) then 
-            API.DoAction_Object_string1(0x33,API.OFF_ACT_GeneralObject_route3,{ "Bank chest" }, 50, true) -- load last preset
-            API.RandomSleep2(1200,0,200) -- 
-            API.WaitUntilMovingEnds()
+    API.DoAction_Object_string1(0x33,API.OFF_ACT_GeneralObject_route3,{ "Bank chest" }, 50, true) -- load last preset
+    API.RandomSleep2(1200,0,200)
+    API.WaitUntilMovingEnds()
 
-            if not ClueUtils.CheckItems(inventoryItems) then 
-                return false -- load last preset dind't work so it fails
-            end
-        end
+    if not ClueUtils.CheckItems(inventoryItems) then 
+        return false -- load last preset dind't work so it fails
     end
+
+    --for _, obj in pairs(inventoryItems) do 
+    --    local count = API.InvItemcount_1(obj.item)
+    --    if not (count == obj.count) then 
+    --        API.DoAction_Object_string1(0x33,API.OFF_ACT_GeneralObject_route3,{ "Bank chest" }, 50, true) -- load last preset
+    --        API.RandomSleep2(1200,0,200) -- 
+    --        API.WaitUntilMovingEnds()
+    --        
+    --        if not ClueUtils.CheckItems(inventoryItems) then 
+    --            return false -- load last preset dind't work so it fails
+    --        end
+    --    end
+    --end
 
 
     if API.GetHPrecent() < 90 then 
-        API.RandomSleep2(6000,100,400)
+        DeadUtils.SleepUntil(ClueUtils.IsHPOver90, 10, "wait for hp full")
     end
 
     if API.GetPrayPrecent() < 90 then 
         API.DoAction_Object1(0x3d,API.OFF_ACT_GeneralObject_route0,{ClueUtils.MostUsedIDS.WarAltar} ,50)
         API.RandomSleep2(600,0,0)
-        API.WaitUntilMovingandAnimEnds()
-        API.RandomSleep2(1200,0,0)
+        DeadUtils.SleepUntil(ClueUtils.IsPrayerOver90, 5, "Wait for prayer")
     end
 
     return true
