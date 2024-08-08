@@ -324,6 +324,7 @@ ClueUtils.Potions = {
     SuperRestore = {3024, 3026, 3028, 3030},
     Adrenaline = {39212, 39214, 39216, 39218},
     HolyOverload = {33246, 33244, 33242, 33240, 33238, 33236},
+    SuperAntiFire = {15304, 15305, 15306, 15307},
 }
 
 ClueUtils.Locations = {
@@ -1013,28 +1014,28 @@ function ClueUtils.VBChecks(ids)
 
     ClueUtils.DoAbility2(ClueUtils.AbilitiesID.Curses.DeflectMagic)
     API.RandomSleep2(1200,0,0)
-    if not DeadUtils.isDeflectMagic() then 
+    if not ClueUtils.IsDeflectMagic() then 
         print("is not deflect magic")
         return false
     end
 
     ClueUtils.DoAbility2(ClueUtils.AbilitiesID.Curses.DeflectRange)
     API.RandomSleep2(1200,0,0)
-    if not DeadUtils.isDeflectRange() then 
+    if not ClueUtils.IsDeflectRange() then 
         print("is not deflect range")
         return false
     end
 
     ClueUtils.DoAbility2(ClueUtils.AbilitiesID.Curses.DeflectMelee)
     API.RandomSleep2(1200,0,0)
-    if not DeadUtils.isDeflectMelee() then 
+    if not ClueUtils.IsDeflectMelee() then 
         print("is not deflect melee")
         return false
     end
 
     ClueUtils.DoAbility2(ClueUtils.AbilitiesID.Curses.SoulSplit)
     API.RandomSleep2(1200,0,0)
-    if not DeadUtils.isSoulSplitting() then 
+    if not ClueUtils.IsSoulSplitting() then 
         print("is not soulsplitting")
         return false
     end
@@ -1042,6 +1043,26 @@ function ClueUtils.VBChecks(ids)
     ClueUtils.DeactivatePrayer(ClueUtils.AbilitiesID.Curses.SoulSplit, ClueUtils.BuffBar.soulsplit)
 
     return true
+end
+
+function ClueUtils.IsSoulSplitting() 
+    local s = API.Buffbar_GetIDstatus(ClueUtils.BuffBar.soulsplit, false)
+    return s.found
+end
+
+function ClueUtils.IsDeflectMagic() 
+    local s = API.Buffbar_GetIDstatus(ClueUtils.BuffBar.prayMageAncient, false)
+    return s.found
+end
+
+function ClueUtils.IsDeflectRange() 
+    local s = API.Buffbar_GetIDstatus(ClueUtils.BuffBar.prayRangeAncient, false)
+    return s.found
+end
+
+function ClueUtils.IsDeflectMelee() 
+    local s = API.Buffbar_GetIDstatus(ClueUtils.BuffBar.prayMeleeAncient, false)
+    return s.found
 end
 
 return ClueUtils
