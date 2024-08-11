@@ -436,6 +436,10 @@ function ClueUtils.isAbilityQueued()
     return API.VB_FindPSettinOrder(5861, 0).state ~= 0
 end
 
+function ClueUtils.NoAbilityQueued() 
+    return API.VB_FindPSettinOrder(5861, 0).state == 0
+end
+
 -- can be used to activate prayer or buffbar like darkness
 ---@param id number
 ---@param buffbarID number
@@ -961,7 +965,7 @@ end
 ---@param id number
 function ClueUtils.PrayerFlicking(id) 
     if id == ClueUtils.AbilitiesID.Curses.DeflectMelee then 
-        if not DeadUtils.isDeflectMelee() then 
+        if not ClueUtils.IsDeflectMelee() then 
             return ClueUtils.DoAbility2(ClueUtils.AbilitiesID.Curses.DeflectMelee)
         end
 
@@ -969,7 +973,7 @@ function ClueUtils.PrayerFlicking(id)
     end
 
     if id == ClueUtils.AbilitiesID.Curses.DeflectMagic then 
-        if not DeadUtils.isDeflectMagic() then 
+        if not ClueUtils.IsDeflectMagic() then 
             return ClueUtils.DoAbility2(ClueUtils.AbilitiesID.Curses.DeflectMagic)
         end
 
@@ -977,7 +981,7 @@ function ClueUtils.PrayerFlicking(id)
     end
 
     if id == ClueUtils.AbilitiesID.Curses.DeflectRange then 
-        if not DeadUtils.isDeflectRange() then 
+        if not ClueUtils.IsDeflectRange() then 
             return ClueUtils.DoAbility2(ClueUtils.AbilitiesID.Curses.DeflectRange)
         end
 
@@ -985,7 +989,7 @@ function ClueUtils.PrayerFlicking(id)
     end
 
     if id == ClueUtils.AbilitiesID.Curses.SoulSplit then 
-        if not DeadUtils.isSoulSplitting() then 
+        if not ClueUtils.IsSoulSplitting() then 
             return ClueUtils.DoAbility2(ClueUtils.AbilitiesID.Curses.SoulSplit)
         end
 
