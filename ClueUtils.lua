@@ -230,6 +230,7 @@ ClueUtils.Abilities = {
         Ruination = API.GetABs_name1("Ruination"),
     },
 
+
     SUPPORT = {
         HolyOverload = API.GetABs_name1("Holy overload potion"),
         Adrenaline = API.GetABs_name1("Super adrenaline potion"),
@@ -315,6 +316,7 @@ ClueUtils.AbilitiesID = {
         DeflectRange = 26044,
         DeflectMelee = 26040,
         SoulSplit = 26033,
+        ProtectMagic = 25959,
     },
     Teleports = {
         WarRetreatTeleport = 12532,
@@ -325,6 +327,7 @@ ClueUtils.Potions = {
     SuperRestore = {3024, 3026, 3028, 3030},
     Adrenaline = {39212, 39214, 39216, 39218},
     HolyOverload = {33246, 33244, 33242, 33240, 33238, 33236},
+    Overload = {}, -- TODO add this
     SuperAntiFire = {15304, 15305, 15306, 15307},
 }
 
@@ -349,6 +352,7 @@ ClueUtils.BuffBar = {
     Devotion = 21665, 
     Overload = 26093,
     Sorrow = 30771,
+    prayMage = 0,
 }
 
 ClueUtils.DeBuffBar = {
@@ -638,21 +642,21 @@ function ClueUtils.InLivingDeath()
 end
 
 function ClueUtils.LivingDeathRotation() 
-    if ClueUtils.DoAbility(ClueUtils.Abilities.DeathSkull) then 
+    if ClueUtils.DoAbility2(ClueUtils.AbilitiesID.Necro.DeathSkulls) then 
         return
     end
 
     if ClueUtils.NecroStacks() >= 6 then 
-        if ClueUtils.DoAbility(ClueUtils.Abilities.FingerDeath) then 
+        if ClueUtils.DoAbility2(ClueUtils.AbilitiesID.Necro.FingerDeath) then 
             return
         end
     end
 
-    if ClueUtils.DoAbility(ClueUtils.Abilities.TouchOfDeath) then 
+    if ClueUtils.DoAbility2(ClueUtils.AbilitiesID.Necro.TouchOfDeath) then 
         return
     end
     
-    ClueUtils.DoAbility(ClueUtils.Abilities.Necromancy)
+    ClueUtils.DoAbility2(ClueUtils.AbilitiesID.Necro.Necromancy)
 end 
 
 function ClueUtils.NecroBestAbility() 
@@ -664,18 +668,18 @@ function ClueUtils.NecroBestAbility()
         return ClueUtils.LivingDeathRotation()
     end
 
-    if ClueUtils.DoAbility(ClueUtils.Abilities.NECRO.LivingDeath) then 
+    if ClueUtils.DoAbility2(ClueUtils.AbilitiesID.Necro.LivingDeath) then 
         return
     end
 
     if not ClueUtils.ConjuresAlive() then 
-        if ClueUtils.DoAbility(ClueUtils.Abilities.NECRO.ArmyConjure) then 
+        if ClueUtils.DoAbility2(ClueUtils.AbilitiesID.Necro.ConjureUndeadArmy) then 
             return
         end
     end
 
     if ClueUtils.SoulStack() >= 3 then 
-        if ClueUtils.DoAbility(ClueUtils.Abilities.NECRO.VolleyOfSouls) then 
+        if ClueUtils.DoAbility2(ClueUtils.AbilitiesID.Necro.Volley) then 
             return
         end
     end
@@ -689,20 +693,20 @@ function ClueUtils.NecroBestAbility()
     end
 
     if ClueUtils.NecroStacks() >= 12 then 
-        if ClueUtils.DoAbility(ClueUtils.Abilities.NECRO.FingerDeath) then 
+        if ClueUtils.DoAbility2(ClueUtils.AbilitiesID.Necro.FingerDeath) then 
             return
         end
     end
 
-    if ClueUtils.DoAbility(ClueUtils.Abilities.NECRO.TouchOfDeath) then 
+    if ClueUtils.DoAbility2(ClueUtils.AbilitiesID.Necro.TouchOfDeath) then 
         return
     end
 
-    if ClueUtils.DoAbility(ClueUtils.Abilities.NECRO.SoulSap) then 
+    if ClueUtils.DoAbility2(ClueUtils.AbilitiesID.Necro.SoulSap) then 
         return
     end
 
-    ClueUtils.DoAbility(ClueUtils.Abilities.NECRO.Necromancy)
+    ClueUtils.DoAbility2(ClueUtils.AbilitiesID.Necro.Necromancy)
 end
 
 function ClueUtils.NecroBestAbilityAvoidUltimates() 
@@ -711,44 +715,40 @@ function ClueUtils.NecroBestAbilityAvoidUltimates()
     end
 
     if not ClueUtils.ConjuresAlive() then 
-        if ClueUtils.DoAbility(ClueUtils.Abilities.NECRO.ArmyConjure) then 
+        if ClueUtils.DoAbility2(ClueUtils.AbilitiesID.Necro.ConjureUndeadArmy) then 
             return
         end
     end
 
     if ClueUtils.SoulStack() >= 3 then 
-        if ClueUtils.DoAbility(ClueUtils.Abilities.NECRO.VolleyOfSouls) then 
+        if ClueUtils.DoAbility2(ClueUtils.AbilitiesID.Necro.Volley) then 
             return
         end
     end
 
-    print("ghost")
-    print(ClueUtils.DoAbility(ClueUtils.Abilities.NECRO.CommandGhost))
     if ClueUtils.DoAbility(ClueUtils.Abilities.NECRO.CommandGhost) then 
         return
     end
 
-    print("skeleton")
-    print(ClueUtils.DoAbility(ClueUtils.Abilities.NECRO.CommandSkeleton))
     if ClueUtils.DoAbility(ClueUtils.Abilities.NECRO.CommandSkeleton) then 
         return
     end
 
     if ClueUtils.NecroStacks() >= 12 then 
-        if ClueUtils.DoAbility(ClueUtils.Abilities.NECRO.FingerDeath) then 
+        if ClueUtils.DoAbility2(ClueUtils.AbilitiesID.Necro.FingerDeath) then 
             return
         end
     end
 
-    if ClueUtils.DoAbility(ClueUtils.Abilities.NECRO.TouchOfDeath) then 
+    if ClueUtils.DoAbility2(ClueUtils.AbilitiesID.Necro.TouchOfDeath) then 
         return
     end
 
-    if ClueUtils.DoAbility(ClueUtils.Abilities.NECRO.SoulSap) then 
+    if ClueUtils.DoAbility2(ClueUtils.AbilitiesID.Necro.SoulSap) then 
         return
     end
 
-    ClueUtils.DoAbility(ClueUtils.Abilities.NECRO.Necromancy)
+    ClueUtils.DoAbility2(ClueUtils.AbilitiesID.Necro.Necromancy)
 end
 
 function ClueUtils.NecroBestAbilityAvoidUltimatesRevo() 
@@ -757,13 +757,13 @@ function ClueUtils.NecroBestAbilityAvoidUltimatesRevo()
     end
 
     if ClueUtils.SoulStack() >= 3 then 
-        if ClueUtils.DoAbility(ClueUtils.Abilities.NECRO.VolleyOfSouls) then 
+        if ClueUtils.DoAbility2(ClueUtils.AbilitiesID.Necro.Volley) then 
             return
         end
     end
 
     if ClueUtils.NecroStacks() >= 6 then 
-        if ClueUtils.DoAbility(ClueUtils.Abilities.NECRO.FingerDeath) then 
+        if ClueUtils.DoAbility2(ClueUtils.AbilitiesID.Necro.FingerDeath) then 
             return
         end
     end
@@ -1067,7 +1067,8 @@ end
 
 function ClueUtils.IsDeflectMagic() 
     local s = API.Buffbar_GetIDstatus(ClueUtils.BuffBar.prayMageAncient, false)
-    return s.found
+    local n = API.Buffbar_GetIDstatus(ClueUtils.BuffBar.prayMage, false)
+    return s.found or n.found
 end
 
 function ClueUtils.IsDeflectRange() 
