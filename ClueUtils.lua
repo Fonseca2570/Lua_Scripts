@@ -497,7 +497,7 @@ function ClueUtils.IncreasePrayerPoints2()
     print(pray)
     local elvenCD = API.DeBuffbar_GetIDstatus(ClueUtils.DeBuffBar.ElvenShard, false)
     local elvenFound = API.InvItemcount_1(ClueUtils.DeBuffBar.ElvenShard)
-    if pray < 500 then 
+    if pray < 200 then 
         if not elvenCD.found and elvenFound > 0 then 
             API.DoAction_Inventory1(ClueUtils.DeBuffBar.ElvenShard, 43358, 1, API.OFF_ACT_GeneralInterface_route)
         else 
@@ -853,7 +853,7 @@ end
 ---@return boolean
 function ClueUtils.WarRetreatPreBoss(inventoryItems, renewFamiliar, pouch) 
     if not ClueUtils.AtLocation(ClueUtils.Locations.WarRetreat) then 
-        if not ClueUtils.DoAbility(ClueUtils.Abilities.WarRetreat) then 
+        if not ClueUtils.DoAbility2(ClueUtils.AbilitiesID.Teleports.WarRetreatTeleport) then 
             return false
         end
 
@@ -1008,7 +1008,7 @@ function ClueUtils.PrayerFlicking(id)
     end
 end
 
-function ClueUtils.VBChecks(ids)
+function ClueUtils.VBChecks(ids, skipPrayers)
     if API.GetPrayPrecent() == 0 then 
         print("prayer is zero")
         return false
@@ -1025,6 +1025,10 @@ function ClueUtils.VBChecks(ids)
             print("failed to check id: ", id)
             return false
         end
+    end
+
+    if skipPrayers then 
+        return true
     end
 
     ClueUtils.DoAbility2(ClueUtils.AbilitiesID.Curses.DeflectMagic)
