@@ -260,6 +260,7 @@ ClueUtils.Abilities = {
     Disassemble = API.GetABs_name1("Disassemble"),
     SuperAntiFire = API.GetABs_name1("Super antifire potion"),
     Devotion = API.GetABs_name1("Devotion"),
+    SuperHeat = API.GetABs_name("Superheat", false)
 }
 
 ClueUtils.AbilitiesID = {
@@ -359,7 +360,7 @@ ClueUtils.DeBuffBar = {
 ---@param ability Abilitybar
 ---@return boolean
 function ClueUtils.IsAbilityAvailable(ability) 
-    local update = API.GetABs_name1(ability.name)
+    local update = API.GetABs_name(ability.name, false)
     return update ~= nil and update.enabled and update.cooldown_timer == 0
 end
 
@@ -768,6 +769,17 @@ function ClueUtils.NecroBestAbilityAvoidUltimatesRevo()
     end
 end
 
+local function canUseSpec()
+    local debuffs = API.DeBuffbar_GetAllIDs()
+    local SpecCooldown = false
+    for _, a in pairs(debuffs) do
+        if a.id == 55480 or a.id == ClueUtils.DeBuffBar.SpecialAtkNecro then
+            SpecCooldown = true
+        end
+    end
+    return not SpecCooldown
+end
+
 function ClueUtils.AOENecro() 
     if ClueUtils.isAbilityQueued() then 
         return
@@ -783,8 +795,7 @@ function ClueUtils.AOENecro()
         return
     end
 
-    local sAtk = API.DeBuffbar_GetIDstatus(ClueUtils.DeBuffBar.SpecialAtkNecro, false)
-    if not sAtk.found then 
+    if canUseSpec() then 
         if ClueUtils.DoAbility2(ClueUtils.AbilitiesID.HP.SpecialAtk) then 
             return
         end
