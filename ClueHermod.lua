@@ -235,7 +235,7 @@ end
 
 local function BossLobby()
     if isportalInterfaceOpen() and not API.ReadPlayerMovin2() then
-        API.DoAction_Interface(0x24, API.OFF_ACT_GeneralInterface_route, 1, 1591, 60, -1, 3808)
+        API.DoAction_Interface(0x24,0xffffffff,1,1591,60,-1,API.OFF_ACT_GeneralInterface_route)
         API.RandomSleep2(600, 600, 400)
         CurrentState = States.BossFight
     else
