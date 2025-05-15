@@ -9,12 +9,12 @@
 
 -- imports
 local API = require("api")
+local ClueUtils = require("ClueUtils")
+local PrayerFlicker = require("Private.prayer_flicker")
 local MAX_IDLE_TIME_MINUTES = 5
 local startTime, afk = os.time(), os.time()
 local fail = 0
 local CurrentState = 0
-
-API.SetDrawLogs(true)
 
 local States = {
     Bank = 0,
@@ -44,12 +44,11 @@ local Names = {
     Shark = "Shark"
 }
 
-local ABs = {
-    Surge = API.GetABs_name1("Surge"),
-    WarRetreat = API.GetABs_name1("War's Retreat Teleport"),
-    SoulSplit = API.GetABs_name1("Soul Split"),
-    EatFood = API.GetABs_name1("Eat Food"),
+local PRAYER_CONFIG = {
+    defaultPrayer = PrayerFlicker.PRAYERS.PROTECT_FROM_MAGIC
 }
+
+local prayerFlicker = PrayerFlicker.new(PRAYER_CONFIG)
 
 local LootTable = {
     989, --crystal key 
@@ -114,23 +113,13 @@ local function gameStateChecks()
 end
 
 local function TeleportWarRetreat() 
-    if ABs.WarRetreat.id ~= 0 and ABs.WarRetreat.enabled then
-        API.DoAction_Ability_Direct(ABs.WarRetreat, 1, API.OFF_ACT_GeneralInterface_route)
-        API.RandomSleep2(2000,1000,2000)
-        API.WaitUntilMovingandAnimEnds()
-    end
-end
-
-local function IsSoulSplit() 
-    local soul = API.Buffbar_GetIDstatus(BuffBar.soulsplit, false)
-    return soul.found
+    ClueUtils.DoAbility2(ClueUtils.AbilitiesID.Teleports.WarRetreatTeleport)
+    API.RandomSleep2(2000,1000,2000)
+    API.WaitUntilMovingandAnimEnds()
 end
 
 local function praySoulSplit() 
-    if not IsSoulSplit() then 
-        API.DoAction_Ability_Direct(ABs.SoulSplit, 1, API.OFF_ACT_GeneralInterface_route)
-        API.RandomSleep2(600,0,0)
-    end
+    ClueUtils.ActivatePrayer(ClueUtils.AbilitiesID.Curses.SoulSplit, ClueUtils.BuffBar.soulsplit)
 end
 
 local function IsHermodAlive() 
@@ -162,9 +151,7 @@ local function openLootWindow()
 end
 
 local function deactivateSoulSplit() 
-    if IsSoulSplit() then 
-        API.DoAction_Ability_Direct(ABs.SoulSplit, 1, API.OFF_ACT_GeneralInterface_route)
-    end
+    ClueUtils.DeactivatePrayer(ClueUtils.AbilitiesID.Curses.SoulSplit, ClueUtils.BuffBar.soulsplit)
 end
 
 local function needBank() 
@@ -174,14 +161,14 @@ end
 local function healthCheck()
     local hp = API.GetHPrecent()
     if hp < 60 then
-        if ABs.EatFood.id ~= 0 and ABs.EatFood.enabled then
+        if ClueUtils.IsAbilityAvailableID(ClueUtils.AbilitiesID.HP.EatFood) then
             print("Eating")
-            API.DoAction_Ability_Direct(ABs.EatFood, 1, API.OFF_ACT_GeneralInterface_route)
+            ClueUtils.DoAbility2(ClueUtils.AbilitiesID.HP.EatFood)
             API.RandomSleep2(600, 600, 600)
         end
         elseif hp < 20 or API.InvItemcount_String(Names.Shark) < 1 then
             print("Teleporting out")
-            API.DoAction_Ability("War's Retreat Teleport", 1, API.OFF_ACT_GeneralInterface_route)
+            ClueUtils.DoAbility2(ClueUtils.AbilitiesID.Teleports.WarRetreatTeleport)
             CurrentState = States.Bank
             API.RandomSleep2(3000, 3000, 3000)
     end
@@ -275,6 +262,9 @@ local function BossFight()
         end
     end
 end
+
+API.SetDrawLogs(true)
+API.SetDrawTrackedSkills(true)
 
 while API.Read_LoopyLoop() do 
     API.DoRandomEvents()
