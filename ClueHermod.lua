@@ -155,7 +155,7 @@ local function deactivateSoulSplit()
 end
 
 local function needBank() 
-    return API.InvItemcount_String(Names.Shark) < 5 or API.GetPrayPrecent() < 90
+    return API.InvItemcount_String(Names.Shark) < 25 or API.GetPrayPrecent() < 90
 end
 
 local function healthCheck()
