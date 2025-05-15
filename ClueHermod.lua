@@ -248,6 +248,7 @@ end
 
 local function BossFight()
     praySoulSplit()
+    ClueUtils.NecroBestAbilityAvoidUltimatesRevo()
     local minion = API.GetAllObjArray1({IDS.Minions}, 50, {1})[1]
     if minion ~= nil and not isFightingMinion() then 
         API.DoAction_NPC(0x2a,API.OFF_ACT_AttackNPC_route, {IDS.Minions}, 50)
